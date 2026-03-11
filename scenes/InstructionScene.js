@@ -41,6 +41,7 @@ export default class InstructionScene extends Phaser.Scene {
         this.add.text(
             width / 2,
             320,
+            "To Max,"
             "Walk through the postcard and click each object\n" +
             "to collect all 5 memories.\n\n" +
             "Once all 5 memories are found,\n" +
