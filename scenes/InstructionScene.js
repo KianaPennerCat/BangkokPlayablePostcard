@@ -41,13 +41,13 @@ export default class InstructionScene extends Phaser.Scene {
         this.add.text(
             width / 2,
             320,
-            "To Max,"
+            "To Max,\n" +
             "Walk through the postcard and click each object\n" +
             "to collect all 5 memories.\n\n" +
             "Once all 5 memories are found,\n" +
             "the final postcard message will appear!",
             {
-                fontFamily: "Indie Flower",
+                fontFamily: "Veranda",
                 fontSize: "34px",
                 color: "#FFF4D6",
                 align: "center",
