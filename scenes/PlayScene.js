@@ -5,41 +5,36 @@ class Play extends Phaser.Scene {
     }
 
     create() {
+        //Gameplay music
+        this.sound.stopAll()
+        this.sound.play("gameplayMusic", {
+            loop: true,
+            volume: 0.4
+        })
 
-        this.physics.world.setBounds(0,0,2000,600)
-        this.cameras.main.setBounds(0,0,2000,600)
+        this.physics.world.setBounds(0,0,2000,600) //Frame size
+        this.cameras.main.setBounds(0,0,2000,600) //Camera follows player
+        
+        this.skyline = this.add.image(400,300,"skyline") //Skyline background
 
-        this.skyline = this.add.image(400,300,"skyline")
-
-        this.skyline.setDisplaySize(
+        this.skyline.setDisplaySize( //Reframe skyline background to fit
             this.cameras.main.width,
             this.cameras.main.height
         )
+        
+        this.skyline.setScrollFactor(0) //Make background static
 
-        this.skyline.setScrollFactor(0)
+        this.player = this.physics.add.sprite(40,520,"walk1") //Set player
 
-        this.player = this.physics.add.sprite(40,520,"walk1")
-
-        this.player.setScale(0.45)
-        this.player.setCollideWorldBounds(true)
+        this.player.setScale(0.45) //Resized player sprite
+        this.player.setCollideWorldBounds(true) //Keeps player within frame
 
         //Camera follow system inspired by: Nathan Altice – Framing example
         //https://github.com/nathanaltice/Framing
 
         this.cameras.main.startFollow(this.player)
-
         this.cursors = this.input.keyboard.createCursorKeys()
-
-        this.anims.create({
-            key: "walk",
-            frames: [
-                { key: "walk1" },
-                { key: "walk2" }
-            ],
-            frameRate: 8,
-            repeat: -1
-        })
-
+        
         //Particle effect system inspired by: Nathan Altice – PartyCoolFX
         //https://github.com/nathanaltice/PartyCoolFX
 
@@ -50,7 +45,7 @@ class Play extends Phaser.Scene {
             quantity:15,
             emitting:false
         })
-
+        
         this.memoriesFound = 0
 
         this.counterText = this.add.text(
@@ -67,7 +62,7 @@ class Play extends Phaser.Scene {
         )
 
         this.counterText.setScrollFactor(0)
-
+        //Memory object dialogue
         this.toastie = this.createMemoryObject(400,460,"toastie",0.25,"First night we went to 7-11 and filled our carts. This became a daily routine. Who knew someone can spend so much money at 7-11?")
         this.cat = this.createMemoryObject(650,470,"cat",0.35,"After 7-11, remember when we used to go feed all the stray cats?")
         this.starbucks = this.createMemoryObject(1000,340,"starbucks",0.28,"Days of locking in at the Starbucks Reserve in Central World Mall")
@@ -76,7 +71,7 @@ class Play extends Phaser.Scene {
 
         this.messageBox = null
     }
-
+    //Initialize memory objects
     createMemoryObject(x,y,key,scale,message){
 
         let obj = this.add.sprite(x,y,key)
@@ -84,26 +79,28 @@ class Play extends Phaser.Scene {
         obj.setInteractive()
         obj.setScale(scale)
 
-        this.tweens.add({
+        this.tweens.add({ //Message text disappears after clicking another object
             targets: obj,
             y: y - 8,
             duration: 1200,
             yoyo: true,
             repeat: -1
         })
-
+        //Collect memory
         obj.on("pointerdown",()=>{
 
             if(obj.visited) return
 
             obj.visited = true
-            obj.setTint(0x888888)
+            obj.setTint(0x888888) //Tint object once collected
+
+            //Play sprite collect sound
+            this.sound.play(key + "Sound")
 
             //Particle burst inspired by: Nathan Altice – PartyCoolFX
             //https://github.com/nathanaltice/PartyCoolFX
 
             this.sparkles.emitParticleAt(obj.x,obj.y,15)
-
             this.memoriesFound++
 
             this.counterText.setText(
@@ -114,10 +111,11 @@ class Play extends Phaser.Scene {
 
             if(this.memoriesFound === 5){
 
-                this.time.delayedCall(3200, ()=> {
+                this.time.delayedCall(3500, ()=> { // //Fades to EndScene once all 5 memories are found
                     this.cameras.main.fade(800, 0, 0, 0)
             
                     this.time.delayedCall(800, ()=> {
+                        this.sound.stopAll()
                         this.scene.start("EndScene")
                     })
                 })
@@ -131,14 +129,14 @@ class Play extends Phaser.Scene {
 
     showMessage(text,x,y){
 
-        // destroy old message after another object is clicked
+        //Destroy old message after another object is clicked
         if(this.messageBox){
             this.messageBox.destroy()
         }
     
-        //Dialogue box inspired by: Nathan Altice – Dialoguing
+        //Created dialogue boxes using containers and layered text objects
         //https://github.com/nathanaltice/Dialoguing
-        //Created dialogue boxes using containers and layered text objects.
+
     
         const boxWidth = 520
         const boxHeight = 120
@@ -157,7 +155,7 @@ class Play extends Phaser.Scene {
             y - 90,
             text,
             {
-                fontFamily:"Bagel",
+                fontFamily:"Indie Flower",
                 fontSize:"22px",
                 color:"#ffffff",
                 align:"center",

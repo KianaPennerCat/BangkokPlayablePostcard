@@ -8,22 +8,19 @@ class EndScene extends Phaser.Scene {
 
         const width = this.scale.width;
         const height = this.scale.height;
+        
+        //Outro music
+        this.sound.stopAll()
+        this.sound.play("introoutroMusic", {
+            loop: true,
+            volume: 0.45
+        })
 
-        /*
-        Postcard framing concept inspired by
-        Nathan Altice Phaser framing examples
-
-        Citation:
-        https://github.com/nathanaltice/Framing
-        */
-
-        // POSTCARD BACKGROUND
+        //Postcard framing concept inspired by Nathan Altice Phaser framing examples
+        //https://github.com/nathanaltice/Framing
         const postcard = this.add.image(width/2, height/2 + 20, "postcard");
 
-        //Scale postcard image to fill screen
-
-        //Citation:
-        //Phaser responsive image scaling technique
+        //Scale postcard image to fill screen: Phaser responsive image scaling technique
         //https://photonstorm.github.io/phaser3-docs/
 
         const scaleX = width / postcard.width;
@@ -33,13 +30,9 @@ class EndScene extends Phaser.Scene {
         postcard.setScale(scale);
 
         //Postcard flip animation: Flips horizontally to simulate turning postcard
-
-        //Citation:
-        //Phaser tween scaling technique
         //https://phaser.io/examples/v3/view/tweens/scale
         
-
-        postcard.setScale(0, scale);
+        postcard.setScale(0, scale); 
 
         this.tweens.add({
             targets: postcard,
@@ -48,14 +41,13 @@ class EndScene extends Phaser.Scene {
             ease: "Cubic.easeOut"
         });
 
-        // Postcard message text
-
+        //Postcard message text
         const line1 = this.add.text(
             width * 0.22,
             height * 0.18,
             "You found all 5 memories!",
             {
-                fontFamily: "Indie Flower",
+                fontFamily: "Bagel",
                 fontSize: "46px",
                 color: "#000000"
             }
@@ -67,7 +59,7 @@ class EndScene extends Phaser.Scene {
             height * 0.34,
             "#BESTSUMMEREVER",
             {
-                fontFamily: "Indie Flower",
+                fontFamily: "Bagel",
                 fontSize: "40px",
                 color: "#000000"
             }
@@ -98,8 +90,7 @@ class EndScene extends Phaser.Scene {
         ).setOrigin(0,0);
 
 
-        // restart text BELOW message
-
+        //Restart text
         const restart = this.add.text(
             width * 0.42,
             height * 0.80,
@@ -113,20 +104,22 @@ class EndScene extends Phaser.Scene {
         
         restart.setAlpha(0);
         
-        this.tweens.add({
+        this.tweens.add({ //Text animation
             targets: restart,
             alpha: 1,
             delay: 1400,
             duration: 800
         });
 
-        /*
-        restart game
-        */
-
+        //Restart game
         this.input.once("pointerdown", () => {
-            this.scene.start("BootScene");
-        });
+            this.sound.play("collectSound")
+        
+            this.time.delayedCall(200, () => {
+                this.sound.stopAll()
+                this.scene.start("CreditScene")
+            })
+        })
 
     }
 

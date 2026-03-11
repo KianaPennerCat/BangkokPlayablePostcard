@@ -5,23 +5,27 @@ export default class BootScene extends Phaser.Scene {
     }
 
     preload() {
-        // load Google font stylesheet
-        // Citation: Phaser text rendering with web fonts
-        // https://phaser.io/examples/v3/view/game-objects/text/google-webfont
+        //load Google font stylesheet
+        //Citation: Phaser text rendering with web fonts
+        //https://phaser.io/examples/v3/view/game-objects/text/google-webfont
 
         const link = document.createElement('link');
         link.href = 'https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap';
         link.rel = 'stylesheet';
         document.head.appendChild(link);
         const { width, height } = this.scale;
-        /*
-        Floating lantern particle effect inspired by:
-        Nathan Altice – PartyCoolFX example
-        https://github.com/nathanaltice/PartyCoolFX
-
-        Creates slow upward drifting particles during the loading screen
-        to evoke floating lanterns often associated with Southeast Asian festivals.
-        */
+        
+        const bagel = document.createElement('style');
+        bagel.textContent = `
+        @font-face {
+            font-family: 'Bagel';
+            src: url('assets/fonts/Bagel_Fat_One/BagelFatOne-Regular.ttf') format('truetype');
+        }
+        `;
+        document.head.appendChild(bagel);
+        
+        //Floating lantern particle effect inspired by: Nathan Altice – PartyCoolFX example
+        //https://github.com/nathanaltice/PartyCoolFX
 
         const lanterns = this.add.particles(0, 0, "lantern", {
             x: { min: 0, max: width },
@@ -35,8 +39,7 @@ export default class BootScene extends Phaser.Scene {
             frequency: 500
         });
 
-        //Thai inspired loading screen
-        //Color palette based on Thai flag + gold
+        //Thai inspired loading screen + Color palette based on Thai flag + gold
 
         this.cameras.main.setBackgroundColor("#1A2A44")
 
@@ -73,7 +76,7 @@ export default class BootScene extends Phaser.Scene {
             0.2
         ).setStrokeStyle(3, 0xFFD700)
 
-        //Progress bar (Thai red)
+        //Progress bar 
         const progressBar = this.add.rectangle(
             width/2 - 150,
             height/2 + 10,
@@ -98,7 +101,7 @@ export default class BootScene extends Phaser.Scene {
             }
         ).setOrigin(0.5)
 
-        //Game assets
+        //Game assets: images
         this.load.image("skyline", "assets/skyline.png")
         this.load.image("postcard", "assets/postcard.png")
         this.load.image("toastie", "assets/toastie.png")
@@ -109,22 +112,33 @@ export default class BootScene extends Phaser.Scene {
         this.load.image("lantern", "assets/lantern.png")
         this.load.image("walk1", "assets/maxwalk1.png")
         this.load.image("walk2", "assets/maxwalk2.png")
+        
+        //Game assets: audio
+        this.load.audio("introoutroMusic", "assets/audio/introoutro.mp3")
+        this.load.audio("gameplayMusic", "assets/audio/gameplay.mp3")
+        this.load.audio("toastieSound", "assets/audio/toastie.mp3")
+        this.load.audio("catSound", "assets/audio/catmeow.mp3")
+        this.load.audio("starbucksSound", "assets/audio/starbucks.mp3")
+        this.load.audio("spaSound", "assets/audio/spa.mp3")
+        this.load.audio("teaSound", "assets/audio/thaitea.mp3")
+        this.load.audio("collectSound", "assets/audio/collect.mp3")
 
         this.load.on('complete', () => {
+            if (!this.anims.exists("walk")) {
+                this.anims.create({
+                    key: "walk",
+                    frames: [
+                        { key: "walk1" },
+                        { key: "walk2" }
+                    ],
+                    frameRate: 6,
+                    repeat: -1
+                });
+            }
 
-            this.anims.create({
-                key: "walk",
-                frames: [
-                    { key: "walk1" },
-                    { key: "walk2" }
-                ],
-                frameRate: 6,
-                repeat: -1
-            });
-
+            //Used fade transitions between scenes to create smoother scene flow.
             //Scene transition pattern inspired by: Nathan Altice – Scenesters example project
             //https://github.com/nathanaltice/Scenesters
-            //Used fade transitions between scenes to create smoother scene flow.
 
             this.cameras.main.fadeOut(400);
 
