@@ -52,9 +52,9 @@ https://pixabay.com/sound-effects/film-special-effects-thud-sound-effect-405470/
 Creative Tilt:
 For this project, I prioritized the animations and framing to feel as though you are visiting a digital postcard.
 Firstly, I created the sprites, and even included a sprite of the person this postcard is designated to. This player sprite makes this project feel more personable.
-The player moves horizontally through a postcard-like version of Bangkok and collects five memories by interacting with meaningful objects from the trip.
 I used scene progression, custom fonts, music, sound effects, postcard framing, and a final flip animation to make the experience feel more interactive with the player.
 I used text animation for text that says "Click to continue/restart" which draws the player to click on that text.
+I included lantern particple effects once each object is clicked to enhance interactivity.
 Each collectible object has its own designated sound, which helps each memory feel more engaging and interactive.
 Lastly, I added a CreditScene after EndScene to give credit to myself as well as well direct players to find my sources.
 */
